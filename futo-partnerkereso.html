@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futópartner Kereső</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+    <h1>Futópartner Kereső</h1>
+    <form id="partnerForm" action="#" method="post">
+        <label for="nev">Név:</label>
+        <input type="text" id="nev" name="nev" required>
+
+        <label for="leiras">Leírás:</label>
+        <textarea id="leiras" name="leiras" rows="4"></textarea>
+
+        <label for="neme">Neme:</label>
+        <input type="radio" id="ferfi" name="neme" value="Férfi"> Férfi
+        <input type="radio" id="no" name="neme" value="Nő"> Nő
+
+        <label for="kedvenc-szin">Kedvenc szín:</label>
+        <input type="color" id="kedvenc-szin" name="kedvenc-szin">
+
+        <label for="szuletesnap">Születésnap:</label>
+        <input type="date" id="szuletesnap" name="szuletesnap">
+
+        <label for="kapcsolat">Kapcsolatfelvétel módja:</label>
+        <select id="kapcsolat" name="kapcsolat">
+            <option value="email">E-mail</option>
+            <option value="telefon">Telefon</option>
+            <option value="posta">Posta</option>
+        </select>
+
+        <label for="email">E-mail cím:</label>
+        <input type="email" id="email" name="email">
+
+        <label for="telefonszam">Telefonszám:</label>
+        <input type="tel" id="telefonszam" name="telefonszam">
+
+        <label for="postai-cim">Postai cím:</label>
+        <input type="text" id="postai-cim" name="postai-cim">
+
+        <label for="iranyitoszam">Irányítószám:</label>
+        <input type="text" id="iranyitoszam" name="iranyitoszam" pattern="[0-9]{4}" required>
+
+        <label for="kedvenc-sportok">Kedvenc sportok:</label>
+        <input type="checkbox" id="futás" name="kedvenc-sportok[]" value="Futás"> Futás
+        <input type="checkbox" id="kerékpározás" name="kedvenc-sportok[]" value="Kerékpározás"> Kerékpározás
+        <input type="checkbox" id="úszás" name="kedvenc-sportok[]" value="Úszás"> Úszás
+
+        <button type="submit">Keresés</button>
+    </form>
+    <script>
+        const form = document.getElementById('partnerForm');
+        const emailField = document.getElementById('email');
+        const telefonszamField = document.getElementById('telefonszam');
+        const postaicimField = document.getElementById('postai-cim');
+        const iranyitoszamField = document.getElementById('iranyitoszam');
+        const kapcsolat = form.querySelector('#kapcsolat');
+        const emailLabel = form.querySelector('label[for="email"]');
+        const telefonszamLabel = form.querySelector('label[for="telefonszam"]');
+        const postaicimLabel = form.querySelector('label[for="postai-cim"]');
+        const iranyitoszamLabel = form.querySelector('label[for="iranyitoszam"]');
+
+        function hideFields() {
+            emailField.style.display = 'none';
+            emailLabel.style.display = 'none';
+            telefonszamField.style.display = 'none';
+            telefonszamLabel.style.display = 'none';
+            postaicimField.style.display = 'none';
+            postaicimLabel.style.display = 'none';
+            iranyitoszamField.style.display = 'none';
+            iranyitoszamLabel.style.display = 'none';
+        }
+
+        hideFields();
+
+        kapcsolat.addEventListener('change', showField);
+
+
+        form.addEventListener('submit', function (event) {
+            const nev = form.querySelector('#nev');
+            const leiras = form.querySelector('#leiras');
+            const neme = form.querySelector('input[name="neme"]:checked');
+            const kapcsolat = form.querySelector('#kapcsolat');
+            const email = form.querySelector('#email');
+            const telefonszam = form.querySelector('#telefonszam');
+            const postaicim = form.querySelector('#postai-cim');
+            const iranyitoszam = form.querySelector('#iranyitoszam');
+            const kedvencSportok = form.querySelectorAll('input[name="kedvenc-sportok[]"]:checked');
+            const szuletesnap = form.querySelector('#szuletesnap');
+            const currentYear = new Date().getFullYear();
+
+            if (!nev.value) {
+                nev.classList.add('error');
+                event.preventDefault();
+            } else {
+                nev.classList.remove('error');
+            }
+
+            if (!neme) {
+                form.querySelectorAll('input[name="neme"]').forEach(input => {
+                    input.classList.add('error');
+                });
+                event.preventDefault();
+            } else {
+                form.querySelectorAll('input[name="neme"]').forEach(input => {
+                    input.classList.remove('error');
+                });
+            }
+
+            if (!kapcsolat.value) {
+                kapcsolat.classList.add('error');
+                event.preventDefault();
+            } else {
+                kapcsolat.classList.remove('error');
+            }
+
+            if (kapcsolat.value === 'email' && (!email.value || !isValidEmail(email.value))) {
+                email.classList.add('error');
+                event.preventDefault();
+            } else {
+                email.classList.remove('error');
+            }
+
+            if (kapcsolat.value === 'telefon' && !telefonszam.value) {
+                telefonszam.classList.add('error');
+                event.preventDefault();
+            } else {
+                telefonszam.classList.remove('error');
+            }
+
+            if (kapcsolat.value === 'posta' && (!postaicim.value || !iranyitoszam.value)) {
+                postaicim.classList.add('error');
+                iranyitoszam.classList.add('error');
+                event.preventDefault();
+            } else {
+                postaicim.classList.remove('error');
+                iranyitoszam.classList.remove('error');
+            }
+
+            if (kedvencSportok.length === 0) {
+                form.querySelectorAll('input[name="kedvenc-sportok[]"]').forEach(input => {
+                    input.classList.add('error');
+                });
+                event.preventDefault();
+            } else {
+                form.querySelectorAll('input[name="kedvenc-sportok[]"]').forEach(input => {
+                    input.classList.remove('error');
+                });
+            }
+
+            const birthYear = new Date(szuletesnap.value).getFullYear();
+            if (birthYear < 1900) {
+                szuletesnap.classList.add('error');
+                event.preventDefault();
+            } else {
+                szuletesnap.classList.remove('error');
+            }
+        });
+        function showField() {
+            if (kapcsolat.value === 'email') {
+                hideFields();
+                emailField.style.display = 'block';
+                emailLabel.style.display = 'block';
+            } else if (kapcsolat.value === 'telefon') {
+                hideFields();
+                telefonszamField.style.display = 'block';
+                telefonszamLabel.style.display = 'block';
+            } else if (kapcsolat.value === 'posta') {
+                hideFields();
+                postaicimField.style.display = 'block';
+                postaicimLabel.style.display = 'block';
+                iranyitoszamField.style.display = 'block';
+                iranyitoszamLabel.style.display = 'block';
+            }
+        }
+
+
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+    </script>
+</body>
+
+</html>

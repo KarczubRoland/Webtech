@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Kapcsolat</title>
+    <style>
+        h1 {
+            color: #333;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            border: 1px solid #333;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        @keyframes running {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .runner {
+            width: 100px;
+            height: 100px;
+            background-image: url('runner.png');
+            background-size: cover;
+            position: relative;
+            animation-name: running;
+            animation-duration: 5s;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Kapcsolat</h1>
+
+    <h2>Elérhetőségek</h2>
+    <table>
+        <tr>
+            <th>Név</th>
+            <th>E-mail cím</th>
+            <th>Telefonszám</th>
+        </tr>
+        <tr>
+            <td>Példa János</td>
+            <td>janos@example.com</td>
+            <td>+36 123 456 789</td>
+        </tr>
+        <tr>
+            <td>Kovács Mária</td>
+            <td>maria@example.com</td>
+            <td>+36 987 654 321</td>
+        </tr>
+    </table>
+
+    <h2>Futóember animációja</h2>
+    <div class="runner"></div>
+</body>
+
+</html>
